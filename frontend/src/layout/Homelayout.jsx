@@ -8,9 +8,9 @@ const Homelayout = ({ children }) => {
 
   return (
     <Layout>
-      <Header className="!bg-[#FF735C] flex items-center justify-center">
+      <Header className="bg-black! flex items-center justify-center">
         <h1 className="text-white text-lg md:text-3xl font-bold text-center">
-          Expense Tracker App
+          Expense Tracker
         </h1>
       </Header>
       <Content
@@ -24,7 +24,7 @@ const Homelayout = ({ children }) => {
       >
         {children}
       </Content>
-      <Footer className="!bg-[#FF735C] flex items-center justify-center"><h1 className="text-white text-lg md:text-3xl font-bold text-center">
+      <Footer className="bg-black! flex items-center justify-center"><h1 className="text-white text-lg md:text-3xl font-bold text-center">
           Footer 
         </h1>
       </Footer>
