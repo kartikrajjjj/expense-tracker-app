@@ -43,7 +43,8 @@ const Login = () => {
                 type="text"
                 htmlType="submit"
                 block
-                className="bg-[#e20808ad]! text-white! font-bold!"
+                className="bg-[#e20808ad]! text-white! font-bold!
+                active:scale-95"
                 >
                     Login
                 </Button>

@@ -2,9 +2,19 @@ import { Button, Card, Form, Input } from "antd";
 import { LockOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Homelayout from "../../../layout/Homelayout";
-const { Item } = Form;
+import axios from "axios";
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
+const { Item } = Form;
 const Signup = () => {
+  const onFinish = async (values)=>{
+    try{
+      const {data} = await axios.post("/api/user/send-mail",values);
+      console.log(data);
+    }catch(error){
+      console.log(error);
+    }
+  }
   return (
     <Homelayout>
       <div className="flex">
@@ -20,7 +30,8 @@ const Signup = () => {
             <h2 className="font-bold text-[#e20808ad] text-2xl text-center mb-6 ">
               Track your expense
             </h2>
-            <Form name="signup-form" layout="vertical">
+            <Form name="signup-form" layout="vertical"
+             onFinish={onFinish}>
               <Item name="fullname" label="Full Name:" rules={[{ required: true }]}>
                 <Input
                   prefix={<UserOutlined />}
@@ -55,7 +66,8 @@ const Signup = () => {
                   type="text"
                   htmlType="submit"
                   block
-                  className="bg-[#e20808ad]! text-white! font-bold!"
+                  className="bg-[#e20808ad]! text-white! font-bold!
+                  active:scale-95"
                 >
                   Signup
                 </Button>

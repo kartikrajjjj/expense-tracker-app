@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 dotenv.config();
 
@@ -13,6 +14,9 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use(morgan("dev"));
+app.use(cors({
+    origin: process.env.DOMAIN
+}))
 
 
 
