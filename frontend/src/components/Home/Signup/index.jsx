@@ -3,18 +3,49 @@ import { LockOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Homelayout from "../../../layout/Homelayout";
 import axios from "axios";
+import { useState } from "react";
+import { toast } from "react-toastify";
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const { Item } = Form;
 const Signup = () => {
-  const onFinish = async (values)=>{
-    try{
-      const {data} = await axios.post("/api/user/send-mail",values);
-      console.log(data);
-    }catch(error){
-      console.log(error);
+
+  const[signupForm] = Form.useForm();
+  
+
+  const [formData, setFormData] = useState(null);
+  const [otp, setOtp] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const onFinish = async (values) => {
+    try {
+      setLoading(true);
+      const { data } = await axios.post("/api/user/send-mail", values);
+      setOtp(data.otp);
+      setFormData(values);
+    } catch (error) {
+      setOtp(null);
+      setFormData(null);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
+  const onSignup = async (values) => {
+    try {
+      if(Number(values.otp)!=Number(otp))
+        return toast.error("Invalid OTP");
+      setLoading(true);
+      await axios.post("/api/user/signup", formData);
+      toast.success("Signup successful");
+      setOtp(null);
+      setFormData(null);
+      signupForm.resetFields();
+    } catch (err) {
+      toast.error(err.response ? err.response.data.message : err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <Homelayout>
       <div className="flex">
@@ -30,49 +61,91 @@ const Signup = () => {
             <h2 className="font-bold text-[#e20808ad] text-2xl text-center mb-6 ">
               Track your expense
             </h2>
-            <Form name="signup-form" layout="vertical"
-             onFinish={onFinish}>
-              <Item name="fullname" label="Full Name:" rules={[{ required: true }]}>
-                <Input
-                  prefix={<UserOutlined />}
-                  placeholder="Enter your full name"
-                />
-              </Item>
-              <Item name="mobile" label="Mobile: " rules={[{ required: true }]}>
-                <Input
-                  prefix={<PhoneOutlined />}
-                  placeholder="Enter your mobile no."
-                />
-              </Item>
-
-              <Item name="email" label="Email:" rules={[{ required: true }]}>
-                <Input
-                  prefix={<UserOutlined />}
-                  placeholder="Enter your username"
-                />
-              </Item>
-              <Item
-                name="password"
-                label="Password:"
-                rules={[{ required: true }]}
-              >
-                <Input.Password
-                  prefix={<LockOutlined />}
-                  placeholder="Enter your password"
-                />
-              </Item>
-              <Item>
-                <Button
-                  type="text"
-                  htmlType="submit"
-                  block
-                  className="bg-[#e20808ad]! text-white! font-bold!
-                  active:scale-95"
+            {otp ? (
+              <Form name="otp-form"
+               layout="vertical"
+               onFinish={onSignup}
+               >
+                <Item
+                  name="otp"
+                  label="OTP:"
+                  rules={[{ required: true }]}
                 >
-                  Signup
-                </Button>
-              </Item>
-            </Form>
+                  <Input.OTP
+                    prefix={<UserOutlined />}
+                    placeholder="Enter your full name"
+                  />
+                </Item>
+                <Item>
+                  <Button
+                    loading={loading}
+                    type="text"
+                    htmlType="submit"
+                    block
+                    className="bg-[#e20808ad]! text-white! font-bold!
+                  active:scale-95"
+                  >
+                    Verify now
+                  </Button>
+                </Item>
+              </Form>
+            ) : (
+              <Form name="signup-form"
+               layout="vertical"
+               onFinish={onFinish}
+               form={signupForm}
+               >
+                <Item
+                  name="fullname"
+                  label="Full Name:"
+                  rules={[{ required: true }]}
+                >
+                  <Input
+                    prefix={<UserOutlined />}
+                    placeholder="Enter your full name"
+                  />
+                </Item>
+                <Item
+                  name="mobile"
+                  label="Mobile: "
+                  rules={[{ required: true }]}
+                >
+                  <Input
+                    prefix={<PhoneOutlined />}
+                    placeholder="Enter your mobile no."
+                  />
+                </Item>
+
+                <Item name="email" label="Email:" rules={[{ required: true }]}>
+                  <Input
+                    prefix={<UserOutlined />}
+                    placeholder="Enter your username"
+                  />
+                </Item>
+                <Item
+                  name="password"
+                  label="Password:"
+                  rules={[{ required: true }]}
+                >
+                  <Input.Password
+                    prefix={<LockOutlined />}
+                    placeholder="Enter your password"
+                  />
+                </Item>
+                <Item>
+                  <Button
+                    loading={loading}
+                    type="text"
+                    htmlType="submit"
+                    block
+                    className="bg-[#e20808ad]! text-white! font-bold!
+                  active:scale-95"
+                  >
+                    Signup
+                  </Button>
+                </Item>
+              </Form>
+            )}
             <div className="flex items-center justify-between">
               <div></div>
               <Link

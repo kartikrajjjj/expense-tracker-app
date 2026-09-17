@@ -2,6 +2,8 @@ import UserModel from "./user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { sendMail } from "../utils/mail.js";
+import { otpTemplate } from "../utils/otp.template.js";
+import { generateOTP } from "../utils/generateOTP.js";
 
 export const createUser = async (req,res)=>{
     try{
@@ -14,16 +16,36 @@ export const createUser = async (req,res)=>{
     }
 }
 
-export const sendEmail = async (req,res)=>{
-    try{
-        await sendMail("kartikraj9756@gmail.com","OTP for signup","<h1>123456</h1>");
-        res.json({
-            message: "Email sent successfully"
-        });
-    } catch(err){
-        res.status(500).json({message : err.message});
+export const sendEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const OTP = generateOTP();
+
+    const sent = await sendMail(
+      email,
+      "OTP for signup",
+      otpTemplate(OTP)
+    );
+
+    if (!sent) {
+      return res.status(500).json({
+        message: "Email failed to send",
+        success: false,
+      });
     }
-}
+
+    res.json({
+      message: "Email sent successfully",
+      otp: OTP,
+      success: true,
+    }); 
+  } catch (err) {
+    res.status(500).json({
+      message: err.message,
+    });
+  }
+};
 
 const createToken = async (user)=>{
     const  payload ={
