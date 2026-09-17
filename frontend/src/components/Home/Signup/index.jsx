@@ -2,10 +2,11 @@ import { Button, Card, Form, Input } from "antd";
 import { LockOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import Homelayout from "../../../layout/Homelayout";
-import axios from "axios";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+
 
 const { Item } = Form;
 const Signup = () => {
@@ -22,7 +23,8 @@ const Signup = () => {
       const { data } = await axios.post("/api/user/send-mail", values);
       setOtp(data.otp);
       setFormData(values);
-    } catch (error) {
+    } catch (err) {
+      toast.error(err.response ? err.response.data.message : err.message);
       setOtp(null);
       setFormData(null);
     } finally {

@@ -21,6 +21,10 @@ export const sendEmail = async (req, res) => {
     const { email } = req.body;
 
     const OTP = generateOTP();
+    const isEmail = await UserModel.findOne({email});
+    if(isEmail){
+      return res.status(400).json({message:"This email is already registered"});
+    }
 
     const sent = await sendMail(
       email,
