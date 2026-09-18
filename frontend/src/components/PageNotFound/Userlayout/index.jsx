@@ -54,7 +54,7 @@ const Userlayout = () => {
       <Sider style={siderStyle} collapsible collapsed={open}>
         <div className="flex items-center justify-center my-4">
           <Image
-            src="/logo.avif"
+            src="/app-logo.png"
             width={60}
             height={60}
             alt="logo"
