@@ -4,10 +4,13 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 const { Item } = Form;
 
 const Login = () => {
+
+  const navigate = useNavigate();
 
   const [loginForm] = Form.useForm();
 
@@ -17,8 +20,13 @@ const Login = () => {
     try {
       setLoading(true);
       const { data } = await axios.post("/api/user/login", values);
-      console.log(data);
-      toast.success("Login successful");
+      const {role}=data;
+      if(role ==="admin"){
+      return toast.success("Admin tried to login");
+      }
+      if(role ==="user"){
+      return navigate("/app/user");
+      }
     } catch (err) {
       toast.error(err.response ? err.response.data.message : err.message);
     } finally {
@@ -45,7 +53,7 @@ const Login = () => {
           onFinish={onFinish}
           form={loginForm}
           >
-            <Item name="email" label="Username:" rules={[{ required: true }]}>
+            <Item name="email" label="Email:" rules={[{ required: true }]}>
               <Input
                 prefix={<UserOutlined />}
                 placeholder="Enter your username"
