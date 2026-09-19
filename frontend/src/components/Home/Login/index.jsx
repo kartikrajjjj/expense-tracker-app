@@ -38,7 +38,7 @@ const Login = () => {
     <div className="flex">
       <div className="w-1/2 hidden md:flex items-center justify-center">
         <img
-          src="img1-expense-tracker.jpg"
+          src="img2.jpg"
           alt="Bank"
           className="w-4/5 object-contain "
         />
@@ -85,7 +85,7 @@ const Login = () => {
           <div className="flex items-center justify-between">
             <Link
               style={{ textDecoration: "underline" }}
-              to="#"
+              to="/forgot-password"
               className="text-[#e20808ad]! font-bold!"
             >
               Forgot Password
