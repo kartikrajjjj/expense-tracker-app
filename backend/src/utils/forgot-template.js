@@ -91,7 +91,7 @@ export const forgotPasswordTemplate = (fullname,link) => {
                 ${process.env.SENDER_EMAIL}</a>
                 </div>
                 <div style="margin-top:12px;font-size:12px;color:#cbd5e1;">
-                  This link expires in 1 hour. For security, do not share this email.
+                  This link expires in 15 minutes. For security, do not share this email.
                 </div>
               </td>
             </tr>
