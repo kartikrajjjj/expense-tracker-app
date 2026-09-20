@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { sendMail } from "../utils/mail.js";
 import { otpTemplate } from "../utils/otp.template.js";
 import { generateOTP } from "../utils/generateOTP.js";
+import { forgotPasswordTemplate } from "../utils/forgot-template.js";
 
 export const createUser = async (req,res)=>{
     try{
@@ -81,6 +82,32 @@ export const login = async (req,res)=>{
             httpOnly : true
         });
         res.json({message: "Login successful",role:user.role});
+
+    } catch(err){
+        res.status(500).json({message : err.message});
+    }
+}
+
+export const forgotPassword = async (req,res)=>{
+    try{
+      const {email} = req.body;
+      const user = await UserModel.findOne({email});
+      if(!user)
+        return res.status(404).json({message: "User does not exists"});
+
+      const token = await jwt.sign({id:user._id},process.env.FORGOT_TOKEN_SECRET, {expiresIn:"15m"});
+      console.log(token);
+      const link = `${process.env.DOMAIN}/forgot-password?token=${token}`;
+      const sent = await sendMail(
+        email,
+        "Expense - forgot password ?" ,
+        forgotPasswordTemplate(user.fullname, link) 
+      );
+
+      if(!sent)
+        return res.status(424).json({message: "Failed to send email"});
+
+      res.json({message: "Please check your email to reset password"});
 
     } catch(err){
         res.status(500).json({message : err.message});
