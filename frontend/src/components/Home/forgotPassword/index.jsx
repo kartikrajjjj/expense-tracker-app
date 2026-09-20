@@ -1,7 +1,7 @@
 import { Button, Card, Form, Input } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Link, useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,32 @@ const ForgotPassword = () => {
   const [rePasswordForm] = Form.useForm();
 
   const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState(params.get("token"));
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const tok = params.get("token");
+    if (tok) {
+      checkToken(tok);
+    } else {
+      setToken(null);
+    }
+  }, [params]);
+
+  const checkToken = async (tok) => {
+    try {
+      (await axios.post(
+        "/api/user/verify-token",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${tok}`
+          }
+        }),
+        setToken(tok));
+    } catch (err) {
+      setToken(null);
+    }
+  }
 
   const onFinish = async (values) => {
     try {
@@ -30,19 +55,24 @@ const ForgotPassword = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   const onChangePassword = async (values) => {
     try {
+      if(values.password !==values.rePassword)
+        return toast.warning("Passwords do not match");
       setLoading(true);
-      const { data } = await axios.post("/api/user/login", values);
-      const { role } = data;
-      if (role === "admin") {
-        return toast.success("Admin tried to login");
+      await axios.put("/api/user/change-password", values, 
+        {
+        headers: {
+          Authorization: `Bearer ${params.get("token")}`
+        }
       }
-      if (role === "user") {
-        return navigate("/app/user");
-      }
+    );
+    toast.success("Password updated successfully, please wait...");
+    setTimeout(()=>{
+      navigate("/")
+    },3000)
     } catch (err) {
       toast.error(err.response ? err.response.data.message : err.message);
     } finally {
@@ -59,7 +89,7 @@ const ForgotPassword = () => {
         <div className="w-full md:w-1/2 flex items-center justify-center p-2 md:p-6 bg-white">
           <Card className="border border-black! w-full max-w-sm shadow-md">
             <h2 className="font-bold text-[#e20808ad] text-2xl text-center mb-6 ">
-              Forgot Password
+              {token ? "Change Password" : "Forgot Password"}
             </h2>
             {token ? (
               <Form
@@ -79,7 +109,7 @@ const ForgotPassword = () => {
                   />
                 </Item>
                 <Item
-                  name="re-password"
+                  name="rePassword"
                   label="re Enter Password:"
                   rules={[{ required: true }]}
                 >

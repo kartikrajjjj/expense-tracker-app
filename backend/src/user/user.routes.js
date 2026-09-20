@@ -1,6 +1,14 @@
 import { Router } from "express";
 
-import { createUser, login, sendEmail , forgotPassword} from "./user.controller.js";
+import { 
+    createUser,
+    login, 
+    sendEmail , 
+    forgotPassword, 
+    verifyToken,
+    changePassword
+} from "./user.controller.js";
+import { verifyTokenGuard } from "../middleware/guard.middleware.js";
 
 const userRouter = Router();
 
@@ -11,5 +19,9 @@ userRouter.post("/login", login);
 userRouter.post("/send-mail", sendEmail);
 
 userRouter.post("/forgot-password", forgotPassword);
+
+userRouter.post("/verify-token",verifyTokenGuard, verifyToken);
+
+userRouter.put("/change-password",verifyTokenGuard, changePassword);
 
 export default userRouter;
