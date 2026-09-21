@@ -76,10 +76,12 @@ export const login = async (req,res)=>{
         } 
         const token =await  createToken(user);
         res.cookie("authToken", token,{
-            maxAge : 86400000,
-            domain : process.env.ENVIRONMENT ==="DEV"? "localhost" : process.env.DOMAIN,
-            secure : process.env.ENVIRONMENT ==="DEV"? false : true,
-            httpOnly : true
+          httpOnly : true ,
+          secure: process.env.ENVIRONMENT !== "DEV",
+          sameSite: process.env.ENVIRONMENT === "DEV" ? "lax" : "none",
+          path : "/",
+          domain: undefined,
+          maxAge : 86400000,
         });
         res.json({message: "Login successful",role:user.role});
 

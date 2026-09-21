@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import Homelayout from "../../../layout/Homelayout";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+import http from "../../../utils/http";
 
 
 const { Item } = Form;
@@ -20,7 +19,7 @@ const Signup = () => {
   const onFinish = async (values) => {
     try {
       setLoading(true);
-      const { data } = await axios.post("/api/user/send-mail", values);
+      const { data } = await http.post("/api/user/send-mail", values);
       setOtp(data.otp);
       setFormData(values);
     } catch (err) {
@@ -37,7 +36,7 @@ const Signup = () => {
       if(Number(values.otp)!=Number(otp))
         return toast.error("Invalid OTP");
       setLoading(true);
-      await axios.post("/api/user/signup", formData);
+      await http.post("/api/user/signup", formData);
       toast.success("Signup successful");
       setOtp(null);
       setFormData(null);
