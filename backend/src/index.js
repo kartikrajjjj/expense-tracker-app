@@ -15,8 +15,9 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 app.use(cors({
-    origin: process.env.DOMAIN
-}))
+    origin: process.env.DOMAIN,
+    credentials : true,
+}));
 
 
 

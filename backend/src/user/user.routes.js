@@ -8,7 +8,7 @@ import {
     verifyToken,
     changePassword
 } from "./user.controller.js";
-import { verifyTokenGuard } from "../middleware/guard.middleware.js";
+import { AdminUserGuard, verifyTokenGuard } from "../middleware/guard.middleware.js";
 
 const userRouter = Router();
 
@@ -23,5 +23,9 @@ userRouter.post("/forgot-password", forgotPassword);
 userRouter.post("/verify-token",verifyTokenGuard, verifyToken);
 
 userRouter.put("/change-password",verifyTokenGuard, changePassword);
+
+userRouter.get("/session",AdminUserGuard, (req,res)=>{
+    return res.json({message: "success"});
+});
 
 export default userRouter;

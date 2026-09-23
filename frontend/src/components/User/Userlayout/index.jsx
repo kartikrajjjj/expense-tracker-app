@@ -1,18 +1,20 @@
 import { AppstoreAddOutlined, BarChartOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
 import { Button, Image, Layout, Menu } from "antd";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Outlet , useNavigate } from "react-router-dom";
+import useSWR from "swr";
+import fetcher from "../../../utils/fetcher";
 
 const { Sider, Header, Content, Footer } = Layout;
 
 const items = [
   {
-    key: "app/user/dashboard",
+    key: "/app/user/dashboard",
     label: "Dashboard",
     icon: <AppstoreAddOutlined />,
   },
   {
-    key: "app/user/report",
+    key: "/app/user/report",
     label: "Reports",
     icon: <BarChartOutlined />,
   },
@@ -27,6 +29,12 @@ const Userlayout = () => {
     const handleNavigate = (menu)=>{
         navigate(menu.key);
     }
+
+    const {data: session , error, isLoading} = useSWR(
+      "/api/user/session",
+      fetcher
+    )
+    console.log(session , error, isLoading);
 
     const siderStyle={
         overflow: 'auto',
@@ -78,6 +86,9 @@ const Userlayout = () => {
             icon={<LogoutOutlined />}
             />
         </Header>
+        <Content>
+          <Outlet />
+        </Content>
       </Layout>
     </Layout>
   );
