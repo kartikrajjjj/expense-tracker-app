@@ -1,9 +1,10 @@
-import { AppstoreAddOutlined, BarChartOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
+import { AppstoreAddOutlined, BarChartOutlined, Loading3QuartersOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
 import { Button, Image, Layout, Menu } from "antd";
 import { useState } from "react";
-import { Outlet , useNavigate } from "react-router-dom";
+import { Navigate, Outlet , useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import fetcher from "../../../utils/fetcher";
+import Loader from "../../Shared/Loader";
 
 const { Sider, Header, Content, Footer } = Layout;
 
@@ -34,7 +35,16 @@ const Userlayout = () => {
       "/api/user/session",
       fetcher
     )
-    console.log(session , error, isLoading);
+
+    if(isLoading)
+      return <Loader></Loader>
+
+    
+    if(!session && session?.role !== "user")
+      return <Navigate to="/" />
+
+    if(error)
+      return <Navigate to="/" />
 
     const siderStyle={
         overflow: 'auto',

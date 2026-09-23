@@ -25,7 +25,7 @@ userRouter.post("/verify-token",verifyTokenGuard, verifyToken);
 userRouter.put("/change-password",verifyTokenGuard, changePassword);
 
 userRouter.get("/session",AdminUserGuard, (req,res)=>{
-    return res.json({message: "success"});
+    return res.json(req.user);
 });
 
 export default userRouter;
