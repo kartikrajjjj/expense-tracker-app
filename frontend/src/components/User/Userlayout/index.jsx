@@ -30,22 +30,7 @@ const Userlayout = () => {
     const handleNavigate = (menu)=>{
         navigate(menu.key);
     }
-
-    const {data: session , error, isLoading} = useSWR(
-      "/api/user/session",
-      fetcher
-    )
-
-    if(isLoading)
-      return <Loader></Loader>
-
     
-    if(!session && session?.role !== "user")
-      return <Navigate to="/" />
-
-    if(error)
-      return <Navigate to="/" />
-
     const siderStyle={
         overflow: 'auto',
         height: '100vh',
