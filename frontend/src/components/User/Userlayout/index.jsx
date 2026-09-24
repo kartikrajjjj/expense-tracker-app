@@ -1,7 +1,7 @@
 import { AppstoreAddOutlined, BarChartOutlined, Loading3QuartersOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
 import { Button, Image, Layout, Menu } from "antd";
 import { useState } from "react";
-import { Navigate, Outlet , useNavigate } from "react-router-dom";
+import { Navigate, Outlet , useLocation, useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import fetcher from "../../../utils/fetcher";
 import Loader from "../../Shared/Loader";
@@ -24,6 +24,7 @@ const items = [
 const Userlayout = () => {
 
     const navigate = useNavigate();
+    const {pathname} = useLocation();
 
     const [open, setOpen] = useState(false);
 
@@ -65,7 +66,7 @@ const Userlayout = () => {
           />
         </div>
         <Menu
-          defaultSelectedKeys={["app/user/dashboard"]}
+          defaultSelectedKeys={[pathname]}
           theme="dark"
           items={items}
           onClick={handleNavigate}
