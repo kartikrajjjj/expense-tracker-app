@@ -6,7 +6,8 @@ import {
     sendEmail , 
     forgotPassword, 
     verifyToken,
-    changePassword
+    changePassword,
+    logout
 } from "./user.controller.js";
 import { AdminUserGuard, verifyTokenGuard } from "../middleware/guard.middleware.js";
 
@@ -15,6 +16,8 @@ const userRouter = Router();
 userRouter.post("/signup", createUser);
 
 userRouter.post("/login", login);
+
+userRouter.get("/logout", logout);
 
 userRouter.post("/send-mail", sendEmail);
 

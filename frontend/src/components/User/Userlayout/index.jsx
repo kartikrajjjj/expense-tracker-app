@@ -5,6 +5,8 @@ import { Navigate, Outlet , useLocation, useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import fetcher from "../../../utils/fetcher";
 import Loader from "../../Shared/Loader";
+import { toast } from "react-toastify";
+import http from "../../../utils/http";
 
 const { Sider, Header, Content, Footer } = Layout;
 
@@ -27,6 +29,7 @@ const Userlayout = () => {
     const {pathname} = useLocation();
 
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleNavigate = (menu)=>{
         navigate(menu.key);
@@ -46,11 +49,24 @@ const Userlayout = () => {
     const headerStyle = {
         position: 'sticky',
         top: 0,
-        zIndex: -1,
+        zIndex: 1,
         width: '100%',
         display: 'flex',
         alignItems: 'center',
         padding: 0,
+    }
+
+    //logout
+    const logout =async ()=>{
+      try{
+        setLoading(true);
+        await http.get("/api/user/logout");
+        navigate("/");
+        setLoading(false);
+      }catch(err){
+        setLoading(false);
+        toast.error(err.response ? err.response.data.message : err.message)
+      }
     }
 
   return (
@@ -80,6 +96,8 @@ const Userlayout = () => {
             />
             <Button
             icon={<LogoutOutlined />}
+            onClick={logout}
+            loading={loading}
             />
         </Header>
         <Content>
