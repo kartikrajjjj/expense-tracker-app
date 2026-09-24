@@ -10,6 +10,7 @@ const ForgotPassword = lazy(()=> import("./components/Home/forgotPassword"));
 const HomePage = lazy(()=> import("./components/Home"));
 const Dashboard = lazy(()=> import("./components/User/Dashboard"));
 const Report = lazy(()=> import("./components/User/Report"));
+const Userlayout = lazy(() => import("./components/User/Userlayout"));
 
 
 
