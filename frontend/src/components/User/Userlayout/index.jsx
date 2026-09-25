@@ -1,5 +1,5 @@
 import { AppstoreAddOutlined, BarChartOutlined, Loading3QuartersOutlined, LogoutOutlined, MenuOutlined } from "@ant-design/icons";
-import { Button, Image, Layout, Menu } from "antd";
+import { Button, Image, Layout, Menu, theme } from "antd";
 import { useState } from "react";
 import { Navigate, Outlet , useLocation, useNavigate } from "react-router-dom";
 import useSWR from "swr";
@@ -69,6 +69,10 @@ const Userlayout = () => {
       }
     }
 
+    const {
+      token: {colorBgContainer, borderRadiusLG }
+    } = theme.useToken();
+
   return (
     <Layout className="min-h-screen!">
       <Sider style={siderStyle} collapsible collapsed={open}>
@@ -100,7 +104,15 @@ const Userlayout = () => {
             loading={loading}
             />
         </Header>
-        <Content>
+        <Content
+        style={{
+          margin: '4px 8px',
+          padding: 4,
+          minHeight: 280,
+          background: colorBgContainer,
+          borderRadius: borderRadiusLG,
+        }}
+        >
           <Outlet />
         </Content>
       </Layout>
